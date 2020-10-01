@@ -37,7 +37,6 @@
 
      }
 
-
      private String obterIP() {
 
          String ipAddress = request.getHeader("x-forwarded-for");
@@ -74,7 +73,6 @@
              pegaTemperatura(response.getBody().get(0).get("woeid").toString(), historico);
          }
 
-
      }
 
      private void pegaTemperatura(String woeid, Historico historico) {
@@ -87,6 +85,7 @@
              historico.setTemperaturaMax(response.getBody().get("consolidated_weather").get(0).get("max_temp").toString());
          }
      }
- }
+
+}
 
 
