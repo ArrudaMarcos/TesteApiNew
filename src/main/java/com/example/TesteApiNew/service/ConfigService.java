@@ -12,6 +12,7 @@
  import org.springframework.web.client.RestTemplate;
 
  import javax.servlet.http.HttpServletRequest;
+ import java.util.Objects;
 
  @Service
  public class ConfigService {
@@ -56,8 +57,8 @@
          String url = "https://ipvigilante.com/json/" + ipAddress;
          response = restTemplate.getForEntity(url, JsonNode.class);
          if (response.getStatusCode().equals(HttpStatus.OK)) {
-             historico.setLongitude(response.getBody().get("data").get("longitude").textValue());
-             historico.setLatitude(response.getBody().get("data").get("latitude").textValue());
+             historico.setLongitude(Objects.requireNonNull(response.getBody()).path("data").get("longitude").textValue());
+             historico.setLatitude(response.getBody().path("data").get("latitude").textValue());
          }
 
      }
@@ -70,7 +71,8 @@
          response = restTemplate.getForEntity(url, JsonNode.class);
 
          if (response.getStatusCode().equals(HttpStatus.OK)) {
-             pegaTemperatura(response.getBody().get(0).get("woeid").toString(), historico);
+             pegaTemperatura(Objects.requireNonNull(response.getBody()).
+                     path(0).get("woeid").toString(), historico);
          }
 
      }
@@ -81,8 +83,10 @@
          response = restTemplate.getForEntity(url, JsonNode.class);
 
          if (response.getStatusCode().equals(HttpStatus.OK)) {
-             historico.setTemperaturaMin(response.getBody().get("consolidated_weather").get(0).get("min_temp").toString());
-             historico.setTemperaturaMax(response.getBody().get("consolidated_weather").get(0).get("max_temp").toString());
+             historico.setTemperaturaMin(Objects.requireNonNull(response.getBody())
+                     .path("consolidated_weather").get(0).get("min_temp").toString());
+             historico.setTemperaturaMax(response.getBody().
+                     path("consolidated_weather").get(0).get("max_temp").toString());
          }
      }
 
